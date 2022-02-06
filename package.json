@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "preinstall": "npm install wasm-pack -g",
+    "preinstall": "cargo install wasm-pack",
     "build-rust": "cd rust-wasm && wasm-pack build"
   },
   "dependencies": {
