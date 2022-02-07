@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build-rust": "cd rust-wasm && wasm-pack build"
+    "build-rust": "cd rust-wasm && cargo check && cargo install wasm-pack && wasm-pack build"
   },
   "dependencies": {
     "next": "12.0.10",
