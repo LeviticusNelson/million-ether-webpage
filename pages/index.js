@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useState, useEffect, useRef} from "react"
+import {useState, useEffect, useRef} from "react"
 
 const Canvas = dynamic({
   loader: async () => {
@@ -45,7 +45,7 @@ const Canvas = dynamic({
         const context = canvas.getContext('2d')
 
         drawPixels(context)
-      }, [])
+      }, [drawPixels])
       return (
         <div className='absolute t-0 l-0 w-full h-full flex flex-col items-center justify-center tracking-[-.1rem] text-[15px]'>
           <canvas ref={canvasRef} width={601} height={601}></canvas>
