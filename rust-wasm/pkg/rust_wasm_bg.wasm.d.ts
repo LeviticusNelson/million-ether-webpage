@@ -7,5 +7,7 @@ export function image_new(a: number, b: number): number;
 export function image_width(a: number): number;
 export function image_height(a: number): number;
 export function image_pixels(a: number, b: number): void;
+export function image_paint(a: number, b: number, c: number, d: number, e: number): void;
 export function __wbindgen_add_to_stack_pointer(a: number): number;
 export function __wbindgen_free(a: number, b: number): void;
+export function __wbindgen_malloc(a: number): number;

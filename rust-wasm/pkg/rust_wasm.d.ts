@@ -22,6 +22,12 @@ export class Image {
 * @returns {Uint8Array}
 */
   pixels(): Uint8Array;
+/**
+* @param {number} x
+* @param {number} y
+* @param {Uint8Array} color
+*/
+  paint(x: number, y: number, color: Uint8Array): void;
 }
 /**
 */

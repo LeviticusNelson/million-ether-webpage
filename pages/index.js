@@ -45,6 +45,18 @@ const Canvas = dynamic({
         const context = canvas.getContext('2d')
 
         drawPixels(context)
+        canvas.addEventListener('click', (event) => {
+          const rect = canvas.getBoundingClientRect();
+
+          let x = event.clientX - rect.left;
+          let y = event.clientY - rect.top;
+
+          x = Math.floor(x / CELL_SIZE);
+          y = Math.floor(y / CELL_SIZE);
+
+          image.paint(x, y, [200,255,200]);
+          drawPixels(context)
+        })
       }, [drawPixels])
       return (
         <div className='absolute t-0 l-0 w-full h-full flex flex-col items-center justify-center tracking-[-.1rem] text-[15px]'>

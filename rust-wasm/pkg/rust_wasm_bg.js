@@ -29,6 +29,15 @@ function getInt32Memory0() {
 function getArrayU8FromWasm0(ptr, len) {
     return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
 }
+
+let WASM_VECTOR_LEN = 0;
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1);
+    getUint8Memory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
 /**
 */
 export class Image {
@@ -89,6 +98,16 @@ export class Image {
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
         }
+    }
+    /**
+    * @param {number} x
+    * @param {number} y
+    * @param {Uint8Array} color
+    */
+    paint(x, y, color) {
+        var ptr0 = passArray8ToWasm0(color, wasm.__wbindgen_malloc);
+        var len0 = WASM_VECTOR_LEN;
+        wasm.image_paint(this.ptr, x, y, ptr0, len0);
     }
 }
 /**
