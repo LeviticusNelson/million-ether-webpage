@@ -13,8 +13,8 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 pub struct Pixel {
     is_blank: bool,
     r: u8,
-    b: u8,
     g: u8,
+    b: u8,
 }
 
 
@@ -30,9 +30,6 @@ impl Pixel {
         [self.r, self.g, self.b]
     }
 
-    // fn change(&mut self) {
-    //     *self = Pixel {is_blank: false, color: self.color};
-    // }
 }
 
 
@@ -66,10 +63,6 @@ impl Image {
             pixels,
         }
     }
-
-    // pub fn render(&self) -> String {
-    //     self.to_string()
-    // }
 
     pub fn width(&self) -> u32 {
         self.width
