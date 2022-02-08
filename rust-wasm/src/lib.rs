@@ -67,10 +67,6 @@ impl Image {
         }
     }
 
-    // pub fn render(&self) -> String {
-    //     self.to_string()
-    // }
-
     pub fn width(&self) -> u32 {
         self.width
     }
