@@ -40,11 +40,6 @@ pub struct Image {
     pixels: Vec<Pixel>,
 }
 
-impl Image {
-    fn get_index(&self, row: u32, col: u32) -> usize {
-        (row * self.width + col) as usize
-    }
-}
 
 #[wasm_bindgen]
 impl Image {
@@ -52,9 +47,9 @@ impl Image {
         let mut pixels = Vec::new();
         pixels.resize(width as usize * height as usize, Pixel{
             is_blank: true,
-            r: 200,
-            g: 200,
-            b: 200,
+            r: 255,
+            g: 255,
+            b: 255,
         },
     );
         Image {
@@ -70,6 +65,10 @@ impl Image {
 
     pub fn height(&self) -> u32 {
         self.height
+    }
+
+    pub fn get_index(&self, row: u32, col: u32) -> usize {
+        (row * self.width + col) as usize
     }
 
     pub fn pixels(&self) -> Vec<u8> {
