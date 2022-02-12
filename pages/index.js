@@ -1,23 +1,21 @@
 import Canvas from '../components/canvas';
 import {useEffect, useState} from 'react';
+import { RgbColorPicker } from 'react-colorful';
 
 export default function Home() {
-  const [color, setColor] = useState({r: 0, g: 0, b: 0});
+  const [color, setColor] = useState({r: 0, g: 0, b: 0})
+  function handleChange(value, index) {
+    let colorCopy = [...color];
+    colorCopy[index] = value;
+    setColor(colorCopy);
+  }
+
   return (
-    <div>
-      <form>
-        <label>Red Value</label>
-        <input type="text"></input>
-      </form>
-      <form>
-        <label>Green Value</label>
-        <input type="text"></input>
-      </form>
-      <form>
-        <label>Blue Value</label>
-        <input type="text"></input>
-      </form>
-      <Canvas width={50} height={50}></Canvas>
+    <div className="flex px-10">
+      <div className="p-10">
+        <RgbColorPicker className="border-4 border-black rounded-xl" color={color} onChange={setColor}></RgbColorPicker>
+      </div>
+      <Canvas rgb={color}></Canvas>
     </div>
   )
 }

@@ -12,6 +12,7 @@
     "next": "12.0.10",
     "prettier": "^2.5.1",
     "react": "17.0.2",
+    "react-colorful": "^5.5.1",
     "react-dom": "17.0.2",
     "rust-wasm": "file:rust-wasm/pkg"
   },
