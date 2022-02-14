@@ -1,4 +1,6 @@
 mod utils;
+use std::convert::TryInto;
+
 use wasm_bindgen::prelude::*;
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 
