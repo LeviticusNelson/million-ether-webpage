@@ -23,6 +23,19 @@ impl Pixel {
     pub fn encode(&self) -> String {
         serde_json::to_string(self).unwrap()
     }
+
+    pub fn r(&self) -> u8 {
+        self.r
+    }
+
+    pub fn g(&self) -> u8 {
+        self.g
+    }
+
+    pub fn b(&self) -> u8 {
+        self.b
+    }
+
 }
 
 impl Serialize for Pixel {
@@ -98,6 +111,7 @@ impl Image {
 
     pub fn paint(&mut self, x: u32, y: u32, color: Vec<u8>) {
         let idx = self.get_index(x, y);
+        if self.pixels[idx].r == color[0] && self.pixels[idx].g == color[1] && self.pixels[idx].b == color[2] {return};
         self.pixels[idx] = Pixel {_is_blank: false, r: color[0], g: color[1], b: color[2], _id: self.pixels[idx]._id};
     }
 

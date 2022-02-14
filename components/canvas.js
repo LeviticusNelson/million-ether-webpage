@@ -62,10 +62,13 @@ const Canvas = dynamic({
 				if (x <= 2 || x >= rect.width - 2) return;
 				x = Math.floor(x / PIXEL_SIZE);
 				y = Math.floor(y / PIXEL_SIZE);
+				
+				let pixel = image.get_pixel(x, y);
+				if (pixel.r() == newColor[0] && pixel.g() == newColor[1] && pixel.b() == newColor[2]) return;
 
 				image.paint(x, y, newColor);
 				drawPixels(context);
-				let pixel = image.get_pixel(x, y);
+				pixel = image.get_pixel(x,y);
 				console.log(pixel.encode());
 			};
 
