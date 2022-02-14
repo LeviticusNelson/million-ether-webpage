@@ -5,9 +5,9 @@ const Canvas = dynamic({
 	loader: async () => {
 		const rust = await import("rust-wasm");
 		const PIXEL_SIZE = 15; //px
-    const WIDTH = 50;
-    const HEIGHT = 50;
-    let image = rust.Image.new(WIDTH, HEIGHT);
+		const WIDTH = 50;
+		const HEIGHT = 50;
+		let image = rust.Image.new(WIDTH, HEIGHT);
 
 		return (props) => {
 			const canvasRef = useRef(null);
@@ -19,7 +19,7 @@ const Canvas = dynamic({
 				const width = image.width();
 				const height = image.height();
 
-        let pixels = image.pixels();
+				let pixels = image.pixels();
 				for (let x = 0; x < width; x++) {
 					for (let y = 0; y < height; y++) {
 						const index = (y * width + x) * 3;
@@ -49,29 +49,55 @@ const Canvas = dynamic({
 				ctx.stroke();
 			};
 
-      const eventClickHandler = (event) => {
-        const canvas = canvasRef.current;
+			let dragging = false;
+			const eventMouseDownHandler = (event) => {
+				dragging = true;
+			};
+			const eventMouseUpHandler = (event) => {
+				dragging = false;
+			};
+			const eventMouseMoveHandler = (event) => {
+				if (!dragging) return;
+				const canvas = canvasRef.current;
 				const context = canvas.getContext("2d");
-        const rect = canvas.getBoundingClientRect();
+				const rect = canvas.getBoundingClientRect();
 
-					let x = event.clientX - rect.left;
-					let y = event.clientY - rect.top;
+				let x = event.clientX - rect.left;
+				let y = event.clientY - rect.top;
 
-					x = Math.floor(x / PIXEL_SIZE);
-					y = Math.floor(y / PIXEL_SIZE);
+				x = Math.floor(x / PIXEL_SIZE);
+				y = Math.floor(y / PIXEL_SIZE);
 
-          let newColor = props.rgb;
-          newColor = [newColor.r, newColor.g, newColor.b];
+				let newColor = props.rgb;
+				newColor = [newColor.r, newColor.g, newColor.b];
 
-					image.paint(x, y, newColor);
-					drawPixels(context);
-      }
+				image.paint(x, y, newColor);
+				drawPixels(context);
+			};
+
+			const eventClickHandler = (event) => {
+				const canvas = canvasRef.current;
+				const context = canvas.getContext("2d");
+				const rect = canvas.getBoundingClientRect();
+
+				let x = event.clientX - rect.left;
+				let y = event.clientY - rect.top;
+
+				x = Math.floor(x / PIXEL_SIZE);
+				y = Math.floor(y / PIXEL_SIZE);
+
+				let newColor = props.rgb;
+				newColor = [newColor.r, newColor.g, newColor.b];
+
+				image.paint(x, y, newColor);
+				drawPixels(context);
+			};
 
 			useEffect(() => {
 				const canvas = canvasRef.current;
 				const context = canvas.getContext("2d");
 
-        drawPixels(context);
+				drawPixels(context);
 			}, [drawPixels]);
 
 			return (
@@ -80,7 +106,10 @@ const Canvas = dynamic({
 						ref={canvasRef}
 						width={WIDTH * PIXEL_SIZE + 1}
 						height={HEIGHT * PIXEL_SIZE + 1}
-            onClick={eventClickHandler}></canvas>
+						onClick={eventClickHandler}
+						onMouseDown={eventMouseDownHandler}
+						onMouseUp={eventMouseUpHandler}
+						onMouseMove={eventMouseMoveHandler}></canvas>
 				</div>
 			);
 		};

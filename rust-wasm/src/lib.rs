@@ -27,7 +27,6 @@ pub struct Image {
 }
 
 
-
 #[wasm_bindgen]
 impl Image {
     pub fn new(width: u32, height: u32) -> Image {
