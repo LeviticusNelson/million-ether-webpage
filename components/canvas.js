@@ -65,7 +65,6 @@ const Canvas = dynamic({
 
 					image.paint(x, y, newColor);
 					drawPixels(context);
-          console.log(image.pixels());
       }
 
 			useEffect(() => {
