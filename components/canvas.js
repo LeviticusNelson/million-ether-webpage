@@ -59,12 +59,17 @@ const Canvas = dynamic({
 
 				let x = event.clientX - rect.left;
 				let y = event.clientY - rect.top;
-				if (x <= 2 || x >= rect.width - 2) return;
+				if (x <= 2 || x >= rect.width - 2 || y <= 2 || y >= rect.height - 2) return;
 				x = Math.floor(x / PIXEL_SIZE);
 				y = Math.floor(y / PIXEL_SIZE);
 
+				let pixel = image.get_pixel(x, y);
+				if (pixel.r() == newColor[0] && pixel.g() == newColor[1] && pixel.b() == newColor[2]) return;
+
 				image.paint(x, y, newColor);
 				drawPixels(context);
+				pixel = image.get_pixel(x,y);
+				console.log(pixel.encode());
 			};
 
 			let dragging = false;
@@ -92,6 +97,7 @@ const Canvas = dynamic({
 			return (
 				<div className='absolute t-0 l-0 w-full h-full flex flex-col items-center justify-center'>
 					<canvas
+						className="cursor-pointer"
 						ref={canvasRef}
 						width={WIDTH * PIXEL_SIZE + 1}
 						height={HEIGHT * PIXEL_SIZE + 1}
