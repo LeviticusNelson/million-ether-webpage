@@ -48,6 +48,10 @@ const Canvas = dynamic({
 				}
 				ctx.stroke();
 			};
+
+			let newColor = props.rgb;
+			newColor = [newColor.r, newColor.g, newColor.b];
+
 			const paintPixel = (event) => {
 				const canvas = canvasRef.current;
 				const context = canvas.getContext("2d");
@@ -55,16 +59,14 @@ const Canvas = dynamic({
 
 				let x = event.clientX - rect.left;
 				let y = event.clientY - rect.top;
-
+				if (x <= 2 || x >= rect.width - 2) return;
 				x = Math.floor(x / PIXEL_SIZE);
 				y = Math.floor(y / PIXEL_SIZE);
 
-				let newColor = props.rgb;
-				newColor = [newColor.r, newColor.g, newColor.b];
-
 				image.paint(x, y, newColor);
 				drawPixels(context);
-			}
+			};
+
 			let dragging = false;
 			const eventMouseDownHandler = (event) => {
 				dragging = true;
@@ -96,7 +98,9 @@ const Canvas = dynamic({
 						onClick={eventClickHandler}
 						onMouseDown={eventMouseDownHandler}
 						onMouseUp={eventMouseUpHandler}
-						onMouseMove={eventMouseMoveHandler}></canvas>
+						onMouseMove={eventMouseMoveHandler}
+						onMouseLeave={eventMouseUpHandler}
+						></canvas>
 				</div>
 			);
 		};
