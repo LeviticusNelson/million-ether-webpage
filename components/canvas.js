@@ -65,6 +65,8 @@ const Canvas = dynamic({
 
 				image.paint(x, y, newColor);
 				drawPixels(context);
+				let pixel = image.get_pixel(x, y);
+				console.log(pixel.encode());
 			};
 
 			let dragging = false;

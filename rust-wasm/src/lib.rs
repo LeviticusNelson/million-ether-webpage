@@ -1,6 +1,6 @@
 mod utils;
-
 use wasm_bindgen::prelude::*;
+use serde::ser::{Serialize, Serializer, SerializeStruct};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -11,13 +11,34 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 #[derive(Clone, Copy)]
 #[wasm_bindgen]
 pub struct Pixel {
+    _id: u64,
     _is_blank: bool,
     r: u8,
     g: u8,
     b: u8,
-    _id: u64,
 }
 
+#[wasm_bindgen]
+impl Pixel {
+    pub fn encode(&self) -> String {
+        serde_json::to_string(self).unwrap()
+    }
+}
+
+impl Serialize for Pixel {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+        {
+            let mut state = serializer.serialize_struct("Pixel", 5)?;
+            state.serialize_field("id", &self._id)?;
+            state.serialize_field("is_blank", &self._is_blank)?;
+            state.serialize_field("r", &self.r)?;
+            state.serialize_field("g", &self.g)?;
+            state.serialize_field("b", &self.b)?;
+            state.end()
+        }
+}
 
 #[wasm_bindgen]
 pub struct Image {
@@ -39,9 +60,9 @@ impl Image {
                     r: 255,
                     g: 255,
                     b: 255,
-                    _id: id})
+                    _id: id});
+                    id += 1;
             }
-            id += 1;
         }
         
         Image {
@@ -60,7 +81,11 @@ impl Image {
     }
 
     pub fn get_index(&self, row: u32, col: u32) -> usize {
-        (row * self.width + col) as usize
+        (col * self.width + row) as usize
+    }
+
+    pub fn get_pixel(&self, row: u32, col: u32) -> Pixel {
+        self.pixels[self.get_index(row, col)]
     }
 
     pub fn pixels(&self) -> Vec<u8> {
@@ -72,8 +97,25 @@ impl Image {
     }
 
     pub fn paint(&mut self, x: u32, y: u32, color: Vec<u8>) {
-        let idx = ((y * self.width) + x)  as usize;
+        let idx = self.get_index(x, y);
         self.pixels[idx] = Pixel {_is_blank: false, r: color[0], g: color[1], b: color[2], _id: self.pixels[idx]._id};
     }
+
+    pub fn encode(&self) -> String {
+        serde_json::to_string(self).unwrap()
+    }
+}
+
+impl Serialize for Image {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+        {
+            let mut state = serializer.serialize_struct("Image", 3)?;
+            state.serialize_field("width", &self.width)?;
+            state.serialize_field("height", &self.height)?;
+            state.serialize_field("pixels", &self.pixels)?;
+            state.end()
+        }
 }
 
