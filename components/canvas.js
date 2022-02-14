@@ -48,7 +48,23 @@ const Canvas = dynamic({
 				}
 				ctx.stroke();
 			};
+			const paintPixel = (event) => {
+				const canvas = canvasRef.current;
+				const context = canvas.getContext("2d");
+				const rect = canvas.getBoundingClientRect();
 
+				let x = event.clientX - rect.left;
+				let y = event.clientY - rect.top;
+
+				x = Math.floor(x / PIXEL_SIZE);
+				y = Math.floor(y / PIXEL_SIZE);
+
+				let newColor = props.rgb;
+				newColor = [newColor.r, newColor.g, newColor.b];
+
+				image.paint(x, y, newColor);
+				drawPixels(context);
+			}
 			let dragging = false;
 			const eventMouseDownHandler = (event) => {
 				dragging = true;
@@ -58,39 +74,10 @@ const Canvas = dynamic({
 			};
 			const eventMouseMoveHandler = (event) => {
 				if (!dragging) return;
-				const canvas = canvasRef.current;
-				const context = canvas.getContext("2d");
-				const rect = canvas.getBoundingClientRect();
-
-				let x = event.clientX - rect.left;
-				let y = event.clientY - rect.top;
-
-				x = Math.floor(x / PIXEL_SIZE);
-				y = Math.floor(y / PIXEL_SIZE);
-
-				let newColor = props.rgb;
-				newColor = [newColor.r, newColor.g, newColor.b];
-
-				image.paint(x, y, newColor);
-				drawPixels(context);
+				paintPixel(event);
 			};
-
 			const eventClickHandler = (event) => {
-				const canvas = canvasRef.current;
-				const context = canvas.getContext("2d");
-				const rect = canvas.getBoundingClientRect();
-
-				let x = event.clientX - rect.left;
-				let y = event.clientY - rect.top;
-
-				x = Math.floor(x / PIXEL_SIZE);
-				y = Math.floor(y / PIXEL_SIZE);
-
-				let newColor = props.rgb;
-				newColor = [newColor.r, newColor.g, newColor.b];
-
-				image.paint(x, y, newColor);
-				drawPixels(context);
+				paintPixel(event);
 			};
 
 			useEffect(() => {
