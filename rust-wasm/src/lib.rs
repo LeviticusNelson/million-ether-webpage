@@ -1,5 +1,7 @@
 mod utils;
+use std::{collections::HashMap};
 
+use postgrest::Postgrest;
 use wasm_bindgen::prelude::*;
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 
@@ -119,6 +121,16 @@ impl Image {
     pub fn encode(&self) -> String {
         serde_json::to_string(self).unwrap()
     }
+
+}
+
+#[wasm_bindgen(catch)]
+pub async fn init_upload_db(image: Image) -> Result<(), JsError> {
+    let client = Postgrest::new("https://urlvihmivtufswwvxcce.supabase.co")
+        .insert_header("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybHZpaG1pdnR1ZnN3d3Z4Y2NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDQ4MTAzMjgsImV4cCI6MTk2MDM4NjMyOH0.6OKEk-2FqO82R7Q3e0BFY-1bhMeCCNyuQqPmZDwXDQc");
+    
+    let resp = client.from("Images").insert(image.encode()).execute().await?;
+    Ok(())
 }
 
 impl Serialize for Image {
@@ -126,12 +138,26 @@ impl Serialize for Image {
     where
         S: Serializer,
         {
-            let mut state = serializer.serialize_struct("Image", 3)?;
+            let mut state = serializer.serialize_struct("Image", 2)?;
             state.serialize_field("width", &self.width)?;
             state.serialize_field("height", &self.height)?;
-            state.serialize_field("pixels", &self.pixels)?;
             state.end()
         }
 }
 
+#[wasm_bindgen]
+pub struct ChangedPixels (HashMap<u64, Pixel>);
+
+#[wasm_bindgen]
+impl ChangedPixels {
+    pub fn new() -> ChangedPixels {
+        let changed: HashMap<u64, Pixel> = HashMap::new();
+        ChangedPixels(changed)
+    }
+    pub fn add_pixel(&mut self, pixel: Pixel){
+        let hash = self;
+        let ChangedPixels(changed) = hash;
+        changed.insert(pixel._id,pixel);
+    }
+}
 

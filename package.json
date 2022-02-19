@@ -9,6 +9,7 @@
     "build-rust": "cd rust-wasm && cargo check && cargo install wasm-pack && wasm-pack build"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.30.3",
     "next": "12.0.10",
     "prettier": "^2.5.1",
     "react": "17.0.2",

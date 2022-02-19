@@ -8,6 +8,7 @@ const Canvas = dynamic({
 		const WIDTH = 50;
 		const HEIGHT = 50;
 		let image = rust.Image.new(WIDTH, HEIGHT);
+		let changedPixels = rust.ChangedPixels.new();
 
 		return (props) => {
 			const canvasRef = useRef(null);
@@ -51,7 +52,7 @@ const Canvas = dynamic({
 
 			let newColor = props.rgb;
 			newColor = [newColor.r, newColor.g, newColor.b];
-
+			
 			const paintPixel = (event) => {
 				const canvas = canvasRef.current;
 				const context = canvas.getContext("2d");
@@ -69,7 +70,7 @@ const Canvas = dynamic({
 				image.paint(x, y, newColor);
 				drawPixels(context);
 				pixel = image.get_pixel(x,y);
-				console.log(pixel.encode());
+				changedPixels.add_pixel(pixel);
 			};
 
 			let dragging = false;
