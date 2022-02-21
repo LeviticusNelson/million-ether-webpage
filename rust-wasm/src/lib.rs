@@ -3,7 +3,7 @@ use std::{collections::HashMap};
 
 use postgrest::Postgrest;
 use wasm_bindgen::prelude::*;
-use serde::ser::{Serialize, Serializer, SerializeStruct};
+use serde::{ser::{Serialize, Serializer, SerializeStruct}, Deserialize};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -11,7 +11,7 @@ use serde::ser::{Serialize, Serializer, SerializeStruct};
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Deserialize)]
 #[wasm_bindgen]
 pub struct Pixel {
     _id: u64,
@@ -58,6 +58,7 @@ impl Serialize for Pixel {
 
 #[wasm_bindgen]
 pub struct Image {
+    _id: u64,
     width: u32,
     height: u32,
     pixels: Vec<Pixel>,
@@ -67,8 +68,9 @@ pub struct Image {
 #[wasm_bindgen]
 impl Image {
     pub fn new(width: u32, height: u32) -> Image {
+        let _id = 0 as u64;
         let mut pixels = Vec::new();
-        let mut id = 0 as u64;
+        let mut pixel_id = 0 as u64;
         for _y in 0..=height {
             for _x in 0..=width {
                 pixels.push(Pixel{
@@ -76,12 +78,13 @@ impl Image {
                     r: 255,
                     g: 255,
                     b: 255,
-                    _id: id});
-                    id += 1;
+                    _id: pixel_id});
+                    pixel_id += 1;
             }
         }
         
         Image {
+            _id,
             width,
             height,
             pixels,
@@ -124,13 +127,17 @@ impl Image {
 
 }
 
-#[wasm_bindgen(catch)]
-pub async fn init_upload_db(image: Image) -> Result<(), JsError> {
-    let client = Postgrest::new("https://urlvihmivtufswwvxcce.supabase.co")
-        .insert_header("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybHZpaG1pdnR1ZnN3d3Z4Y2NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDQ4MTAzMjgsImV4cCI6MTk2MDM4NjMyOH0.6OKEk-2FqO82R7Q3e0BFY-1bhMeCCNyuQqPmZDwXDQc");
+// Returns JSON representation of Image
+#[wasm_bindgen]
+pub async fn get_image_from_db(url: String, key: String, token: String) -> Result<String, JsError> {
+    let mut authorization : String = "Bearer ".to_owned();
+    authorization.push_str(&token);
+
+    let client = Postgrest::new(url.to_string()).insert_header("apikey", key.to_string()).insert_header("Authorization", authorization.to_string()).schema("public");
     
-    let resp = client.from("Images").insert(image.encode()).execute().await?;
-    Ok(())
+    let result = client.from("Images").select("*").order("id.desc").limit(1).execute().await?;
+    let body = result.text().await?;
+    Ok(body)
 }
 
 impl Serialize for Image {
