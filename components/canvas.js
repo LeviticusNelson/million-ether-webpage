@@ -1,13 +1,25 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect, useRef } from "react";
+import absoluteUrl from "next-absolute-url";
+
+async function getImage(){
+	const res = await fetch("/api/image");
+	const data = await res.json();
+	console.log(data);
+	return data;
+}
 
 const Canvas = dynamic({
 	loader: async () => {
 		const rust = await import("rust-wasm");
 		const PIXEL_SIZE = 15; //px
-		const WIDTH = 50;
-		const HEIGHT = 50;
-		let image = rust.Image.new(WIDTH, HEIGHT);
+
+		const data = await getImage();
+		let image = rust.Image.decode(data[0]);
+		image.sort_pixels();
+		const WIDTH = image.width();
+		const HEIGHT = image.height();
+
 		let changedPixels = rust.ChangedPixels.new();
 
 		return (props) => {
@@ -52,7 +64,7 @@ const Canvas = dynamic({
 
 			let newColor = props.rgb;
 			newColor = [newColor.r, newColor.g, newColor.b];
-			
+
 			const paintPixel = (event) => {
 				const canvas = canvasRef.current;
 				const context = canvas.getContext("2d");
@@ -60,16 +72,22 @@ const Canvas = dynamic({
 
 				let x = event.clientX - rect.left;
 				let y = event.clientY - rect.top;
-				if (x <= 2 || x >= rect.width - 2 || y <= 2 || y >= rect.height - 2) return;
+				if (x <= 2 || x >= rect.width - 2 || y <= 2 || y >= rect.height - 2)
+					return;
 				x = Math.floor(x / PIXEL_SIZE);
 				y = Math.floor(y / PIXEL_SIZE);
 
 				let pixel = image.get_pixel(x, y);
-				if (pixel.r() == newColor[0] && pixel.g() == newColor[1] && pixel.b() == newColor[2]) return;
+				if (
+					pixel.r() == newColor[0] &&
+					pixel.g() == newColor[1] &&
+					pixel.b() == newColor[2]
+				)
+					return;
 
 				image.paint(x, y, newColor);
 				drawPixels(context);
-				pixel = image.get_pixel(x,y);
+				pixel = image.get_pixel(x, y);
 				changedPixels.add_pixel(pixel);
 			};
 
@@ -98,7 +116,7 @@ const Canvas = dynamic({
 			return (
 				<div className='absolute t-0 l-0 w-full h-full flex flex-col items-center justify-center'>
 					<canvas
-						className="cursor-pointer"
+						className='cursor-pointer'
 						ref={canvasRef}
 						width={WIDTH * PIXEL_SIZE + 1}
 						height={HEIGHT * PIXEL_SIZE + 1}
@@ -106,8 +124,7 @@ const Canvas = dynamic({
 						onMouseDown={eventMouseDownHandler}
 						onMouseUp={eventMouseUpHandler}
 						onMouseMove={eventMouseMoveHandler}
-						onMouseLeave={eventMouseUpHandler}
-						></canvas>
+						onMouseLeave={eventMouseUpHandler}></canvas>
 				</div>
 			);
 		};

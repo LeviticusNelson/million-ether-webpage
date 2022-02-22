@@ -2,7 +2,7 @@
 name = "rust-wasm"
 version = "0.1.0"
 authors = ["Levi Nelson <levibb11@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -10,8 +10,6 @@ crate-type = ["cdylib", "rlib"]
 [features]
 default = ["console_error_panic_hook"]
 
-[dependencies.redis]
-version = "*"
 
 [dependencies]
 wasm-bindgen = { version = "0.2.79", features = ["serde-serialize"]}
