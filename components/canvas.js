@@ -1,20 +1,13 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect, useRef } from "react";
-import absoluteUrl from "next-absolute-url";
 
-async function getImage(){
-	const res = await fetch("/api/image");
-	const data = await res.json();
-	console.log(data);
-	return data;
-}
 
 const Canvas = dynamic({
 	loader: async () => {
 		const rust = await import("rust-wasm");
 		const PIXEL_SIZE = 15; //px
-
-		const data = await getImage();
+		const response = await fetch(`/api/image`);
+		const data = await response.json();
 		let image = rust.Image.decode(data[0]);
 		image.sort_pixels();
 		const WIDTH = image.width();
@@ -129,6 +122,7 @@ const Canvas = dynamic({
 			);
 		};
 	},
-});
+	
+}, { ssr: false});
 
 export default Canvas;
