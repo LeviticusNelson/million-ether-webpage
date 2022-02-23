@@ -19,7 +19,7 @@ export default function Home({ user }) {
 					color={color}
 					onChange={setColor}></RgbColorPicker>
 			</div>
-			<Canvas rgb={color}></Canvas>
+			<Canvas rgb={color} userId={user.id}></Canvas>
 		</div>
 	);
 }

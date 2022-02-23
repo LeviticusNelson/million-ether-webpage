@@ -13,10 +13,10 @@ const Canvas = dynamic(
 			image.sort_pixels();
 			const WIDTH = image.width();
 			const HEIGHT = image.height();
-			const user = await supabase.auth.user();
-
+			
 			return (props) => {
 				const canvasRef = useRef(null);
+				const userId = props.userId;
 
 				const drawPixels = (ctx) => {
 					ctx.strokeStyle = "black";
@@ -81,10 +81,11 @@ const Canvas = dynamic(
 					image.paint(x, y, newColor);
 					drawPixels(context);
 					pixel = image.get_pixel(x, y);
-					//This should be rewritten in rust
+					
+					// This should be rewritten in rust
 					const { data, error } = await supabase
 						.from("Pixels")
-						.update({ r: pixel.r(), g: pixel.g(), b: pixel.b(), last_user: user.id, is_blank: false })
+						.update({ r: pixel.r(), g: pixel.g(), b: pixel.b(), last_user: userId, is_blank: false })
 						.eq("id", pixel.id());
 				};
 
