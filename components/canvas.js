@@ -9,7 +9,7 @@ const Canvas = dynamic(
 			const PIXEL_SIZE = 15; //px
 			const response = await fetch(`/api/image`);
 			const data = await response.json();
-			let image = rust.Image.decode(data[0]);
+			let image = await rust.Image.decode(data[0]);
 			image.sort_pixels();
 			const WIDTH = image.width();
 			const HEIGHT = image.height();
