@@ -29,6 +29,7 @@ export default function Login({ session }) {
 			<main >
 				<h1 className='text-2xl'>Login</h1>
 				<input
+					placeholder="Enter email"
 					className='border-2 border-black'
 					type='text'
 					onChange={(e) => setEmail(e.target.value)}
