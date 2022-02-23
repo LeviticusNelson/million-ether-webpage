@@ -158,7 +158,7 @@ pub async fn get_image_from_db(url: String, key: String, token: String) -> Resul
     let image_result = client.from("Images").select("id,width,height").order("id.desc").limit(1).execute().await?;
     let image_body = image_result.text().await?;
     let image_id = get_image_value(&image_body, "id").unwrap();
-    let pixel_body = get_pixels_from_db(client, image_id).await?;
+    let pixel_body = get_pixels_from_db(client, &image_id).await?;
     let insert_pixel = [r#","pixels":"#,&pixel_body].concat();
     let mut image_body = image_body.replace("}]", "");
     image_body.push_str(&insert_pixel);
@@ -174,7 +174,7 @@ fn get_image_value(json_string: &String, key: &str) -> Result<String, serde_json
 }
 
 
-async fn get_pixels_from_db(client : Postgrest, image_id : String) -> Result<String, JsError> {
+async fn get_pixels_from_db(client : Postgrest, image_id : &String) -> Result<String, JsError> {
     let pixel_results = client.from("Pixels").select("id,is_blank,r,g,b").eq("image_id", image_id).execute().await?;
     let pixel_body = pixel_results.text().await?;
     Ok(pixel_body)
