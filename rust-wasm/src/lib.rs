@@ -1,5 +1,4 @@
 mod utils;
-use std::{collections::HashMap};
 
 use postgrest::Postgrest;
 use serde_json::{Value};
@@ -31,6 +30,10 @@ impl Pixel {
     pub fn decode(val: &JsValue) -> Pixel {
         let deserialized: Pixel = val.into_serde().unwrap();
         deserialized
+    }
+
+    pub fn id(&self) -> u64 {
+        self.id
     }
 
     pub fn r(&self) -> u8 {
@@ -187,21 +190,5 @@ impl Serialize for Image {
             state.serialize_field("height", &self.height)?;
             state.end()
         }
-}
-
-#[wasm_bindgen]
-pub struct ChangedPixels (HashMap<u64, Pixel>);
-
-#[wasm_bindgen]
-impl ChangedPixels {
-    pub fn new() -> ChangedPixels {
-        let changed: HashMap<u64, Pixel> = HashMap::new();
-        ChangedPixels(changed)
-    }
-    pub fn add_pixel(&mut self, pixel: Pixel){
-        let hash = self;
-        let ChangedPixels(changed) = hash;
-        changed.insert(pixel.id,pixel);
-    }
 }
 
