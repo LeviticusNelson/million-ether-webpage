@@ -6,17 +6,20 @@ import { useRouter } from 'next/router';
 
 export default function Home({ user }) {
 	const [profile, setProfile] = useState(null);
+	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 	useEffect(() => {
 		fetchProfile();
 	}, []);
 	async function fetchProfile() {
+		setLoading(true);
 		const profileData = await supabase.auth.user();
 		if (!profileData) {
 			router.push("/login");
 			console.log(profileData);
 		} else {
 			setProfile(profileData);
+			setLoading(false);
 		}
 	}
 	const [color, setColor] = useState({ r: 0, g: 0, b: 0 });
@@ -24,6 +27,12 @@ export default function Home({ user }) {
 		let colorCopy = [...color];
 		colorCopy[index] = value;
 		setColor(colorCopy);
+	}
+
+	if (loading) {
+		return (
+			<p>loading:</p>
+		)
 	}
 
 	return (
