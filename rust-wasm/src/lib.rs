@@ -149,9 +149,9 @@ impl Image {
 
 // Returns JSON representation of Image
 #[wasm_bindgen]
-pub async fn get_image_from_db(url: String, key: String, token: String) -> Result<JsValue, JsError> {
+pub async fn get_image_from_db(url: String, key: String) -> Result<JsValue, JsError> {
     let mut authorization : String = "Bearer ".to_owned();
-    authorization.push_str(&token);
+    authorization.push_str(&key);
 
     let client = Postgrest::new(url.to_string()).insert_header("apikey", key.to_string()).insert_header("Authorization", authorization.to_string()).schema("public");
     
