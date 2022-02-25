@@ -11,8 +11,8 @@ export default async function handler(req, res) {
 			token
 		);
 		await res.status(200).json(image);
-	} catch (error) {
-		res.json(error);
+	} catch (err) {
+		res.json(err);
 		res.status(405).end();
 	}
 }

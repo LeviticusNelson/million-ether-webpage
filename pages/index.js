@@ -2,8 +2,23 @@ import Canvas from "../components/canvas";
 import { useEffect, useState } from "react";
 import { RgbColorPicker } from "react-colorful";
 import { supabase } from "../utils/supabaseClient";
+import { useRouter } from 'next/router';
 
 export default function Home({ user }) {
+	const [profile, setProfile] = useState(null);
+	const router = useRouter();
+	useEffect(() => {
+		fetchProfile();
+	}, []);
+	async function fetchProfile() {
+		const profileData = await supabase.auth.user();
+		if (!profileData) {
+			router.push("/login");
+			console.log(profileData);
+		} else {
+			setProfile(profileData);
+		}
+	}
 	const [color, setColor] = useState({ r: 0, g: 0, b: 0 });
 	function handleChange(value, index) {
 		let colorCopy = [...color];
@@ -19,17 +34,7 @@ export default function Home({ user }) {
 					color={color}
 					onChange={setColor}></RgbColorPicker>
 			</div>
-			<Canvas rgb={color} userId={user.id}></Canvas>
+			<Canvas rgb={color} userId={profile}></Canvas>
 		</div>
 	);
-}
-
-export async function getServerSideProps({ req }) {
-	const { user } = await supabase.auth.api.getUserByCookie(req);
-
-	if (!user) {
-		return { props: {}, redirect: { destination: "/login" } };
-	}
-
-	return { props: { user } };
 }
