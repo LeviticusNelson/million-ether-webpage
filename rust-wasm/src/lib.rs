@@ -3,7 +3,7 @@ mod utils;
 use postgrest::Postgrest;
 use serde_json::{Value};
 use wasm_bindgen::prelude::*;
-use serde::{ser::{Serialize, Serializer, SerializeStruct}, Deserialize};
+use serde::{ser::{ Serializer, SerializeStruct}, Serialize, Deserialize};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -11,7 +11,7 @@ use serde::{ser::{Serialize, Serializer, SerializeStruct}, Deserialize};
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[derive(Clone, Copy, Deserialize)]
+#[derive(Clone, Copy, Deserialize, Debug)]
 #[wasm_bindgen]
 pub struct Pixel {
     id: u64,
@@ -20,6 +20,7 @@ pub struct Pixel {
     g: u8,
     b: u8,
 }
+
 
 #[wasm_bindgen]
 impl Pixel {
@@ -66,7 +67,7 @@ impl Serialize for Pixel {
 }
 
 
-#[derive( Deserialize)]
+#[derive( Deserialize, Debug)]
 #[wasm_bindgen]
 pub struct Image {
     id: u64,
@@ -78,8 +79,7 @@ pub struct Image {
 
 #[wasm_bindgen]
 impl Image {
-    pub fn new(width: u32, height: u32) -> Image {
-        let id = 0 as u64;
+    pub fn new(id: u64, width: u32, height: u32) -> Image {
         let mut pixels = Vec::new();
         let mut pixel_id = 0 as u64;
         for _y in 0..=height {
@@ -100,6 +100,10 @@ impl Image {
             height,
             pixels,
         }
+    }
+
+    fn replace_pixels(&mut self, pixels: Vec<Pixel>) {
+        self.pixels = pixels
     }
 
     pub fn decode(val: &JsValue) -> Image {
@@ -147,6 +151,13 @@ impl Image {
 
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+struct ImageResult {
+    id: u64,
+    width: u32,
+    height: u32,
+}
+
 // Returns JSON representation of Image
 #[wasm_bindgen]
 pub async fn get_image_from_db(url: String, key: String) -> Result<JsValue, JsError> {
@@ -155,27 +166,23 @@ pub async fn get_image_from_db(url: String, key: String) -> Result<JsValue, JsEr
 
     let client = Postgrest::new(url.to_string()).insert_header("apikey", key.to_string()).insert_header("Authorization", authorization.to_string()).schema("public");
     
-    let image_result = client.from("Images").select("id,width,height").order("id.desc").limit(1).execute().await?;
+    let image_result = client.from("Images").select("id,width,height").order("id.desc").single().execute().await?;
     let image_body = image_result.text().await?;
-    let image_id = get_image_value(&image_body, "id").unwrap();
+    
+    let image_result_struct : ImageResult = serde_json::from_str(&image_body).unwrap();
+    let mut final_image_struct : Image = Image::new(image_result_struct.id, image_result_struct.width, image_result_struct.height);
+    
+    let image_id = image_result_struct.id;
     let pixel_body = get_pixels_from_db(client, &image_id).await?;
-    let insert_pixel = [r#","pixels":"#,&pixel_body].concat();
-    let mut image_body = image_body.replace("}]", "");
-    image_body.push_str(&insert_pixel);
-    image_body.push_str("}]");
-    Ok(JsValue::from_serde(&image_body).unwrap())
+    let pixels : Vec<Pixel> = serde_json::from_str(&pixel_body)?;
+    final_image_struct.replace_pixels(pixels);
+    let image_json = serde_json::to_string(&final_image_struct)?;
+    Ok(JsValue::from_serde(&image_json).unwrap())
 }
 
 
-fn get_image_value(json_string: &String, key: &str) -> Result<String, serde_json::Error> {
-    let json : Value = serde_json::from_str(&json_string)?;
-    let result = &json[0][key];
-    Ok(result.to_string())
-}
-
-
-async fn get_pixels_from_db(client : Postgrest, image_id : &String) -> Result<String, JsError> {
-    let pixel_results = client.from("Pixels").select("id,is_blank,r,g,b").eq("image_id", image_id).execute().await?;
+async fn get_pixels_from_db(client : Postgrest, image_id : &u64) -> Result<String, JsError> {
+    let pixel_results = client.from("Pixels").select("id,is_blank,r,g,b").eq("image_id", image_id.to_string()).execute().await?;
     let pixel_body = pixel_results.text().await?;
     Ok(pixel_body)
 }
@@ -185,9 +192,11 @@ impl Serialize for Image {
     where
         S: Serializer,
         {
-            let mut state = serializer.serialize_struct("Image", 2)?;
+            let mut state = serializer.serialize_struct("Image", 4)?;
+            state.serialize_field("id", &self.id)?;
             state.serialize_field("width", &self.width)?;
             state.serialize_field("height", &self.height)?;
+            state.serialize_field("pixels", &self.pixels)?;
             state.end()
         }
 }
