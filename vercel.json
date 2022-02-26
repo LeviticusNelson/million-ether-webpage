@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/image.js": {
+      "pages/api/image.js": {
         "includeFiles": "rust-wasm/pkg"
       }
     }
