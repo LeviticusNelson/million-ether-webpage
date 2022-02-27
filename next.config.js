@@ -1,6 +1,7 @@
 // next.config.js
 
 module.exports = {
+  cleanDistDir: false,
   webpack(config, { isServer, dev }) {
     config.experiments = {
       asyncWebAssembly: true,
