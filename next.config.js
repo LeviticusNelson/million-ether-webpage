@@ -1,11 +1,11 @@
 // next.config.js
 
 module.exports = {
+  swcMinify: true,
   webpack(config, { isServer, dev }) {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
-      futureDefaults: true,
     };
 
     if (!dev && isServer) {
