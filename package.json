@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.30.6",
-    "next": "^12.1.1-canary.4",
+    "next": "^12.1.0",
     "next-absolute-url": "^1.2.2",
     "prettier": "^2.5.1",
     "react": "17.0.2",
