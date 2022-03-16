@@ -1,7 +1,6 @@
 mod utils;
 
 use postgrest::Postgrest;
-use serde_json::{Value};
 use wasm_bindgen::prelude::*;
 use serde::{ser::{ Serializer, SerializeStruct}, Serialize, Deserialize};
 
