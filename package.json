@@ -9,6 +9,7 @@
     "build-rust": "cd rust-wasm && cargo check && cargo install wasm-pack && wasm-pack build && cd .."
   },
   "dependencies": {
+    "@leviticusnelson/rust-wasm": "^0.1.0",
     "@supabase/supabase-js": "^1.30.6",
     "next": "^12.1.0",
     "next-absolute-url": "^1.2.2",
@@ -16,7 +17,6 @@
     "react": "17.0.2",
     "react-colorful": "^5.5.1",
     "react-dom": "17.0.2",
-    "rust-wasm": "file:rust-wasm/pkg",
     "swr": "^1.2.2"
   },
   "devDependencies": {

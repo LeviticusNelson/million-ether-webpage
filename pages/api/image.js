@@ -1,4 +1,4 @@
-import { get_image_from_db } from "rust-wasm";
+import { get_image_from_db } from "@leviticusnelson/rust-wasm";
 export default async function handler(req, res) {
 	try {
 		const url = process.env.NEXT_PUBLIC_SUPABASE_URL + "/rest/v1";
