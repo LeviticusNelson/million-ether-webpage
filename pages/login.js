@@ -6,7 +6,6 @@ export default function Login({ session }) {
 	const [submitted, setSubmitted] = useState(false);
 
 	async function login() {
-		console.log("Logging in...");
 		if (!email) return;
 		const { error, data } = await supabase.auth.signIn({
 			email,
