@@ -5,7 +5,7 @@ import { supabase } from "../utils/supabaseClient";
 const Canvas = dynamic(
 	{
 		loader: async () => {
-			const rust = await import("rust-wasm");
+			const rust = await import("@leviticusnelson/rust-wasm");
 			const PIXEL_SIZE = 15; //px
 			const response = await fetch("/api/image");
 			const profileData = await supabase.auth.user();

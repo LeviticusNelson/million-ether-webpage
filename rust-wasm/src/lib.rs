@@ -1,7 +1,6 @@
 mod utils;
 
 use postgrest::Postgrest;
-use serde_json::{Value};
 use wasm_bindgen::prelude::*;
 use serde::{ser::{ Serializer, SerializeStruct}, Serialize, Deserialize};
 
@@ -159,6 +158,7 @@ struct ImageResult {
 }
 
 // Returns JSON representation of Image
+
 #[wasm_bindgen]
 pub async fn get_image_from_db(url: String, key: String) -> Result<JsValue, JsError> {
     let mut authorization : String = "Bearer ".to_owned();
