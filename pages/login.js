@@ -24,19 +24,27 @@ export default function Login({ session }) {
 		);
 	}
 
+	const onFormSubmit = (e) => {
+		login();
+	};
+
 	return (
 		<div className='flex w-full h-full justify-center items-center'>
-			<main >
+			<main>
 				<h1 className='text-2xl'>Login</h1>
-				<input
-					placeholder="Enter email"
-					className='border-2 border-black'
-					type='text'
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<button className='border-2 border-blue-50 bg-blue-400 p-2' onClick={(e) => login()}>
-					Login
-				</button>
+				<form onSubmit={onFormSubmit}>
+					<input
+						placeholder='Enter email'
+						className='border-2 border-black'
+						type='text'
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+					<button
+						className='border-2 border-blue-50 bg-blue-400 p-2'
+						type='submit'>
+						Login
+					</button>
+				</form>
 			</main>
 		</div>
 	);
