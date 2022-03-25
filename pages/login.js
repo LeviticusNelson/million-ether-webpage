@@ -5,7 +5,8 @@ export default function Login({ session }) {
 	const [email, setEmail] = useState("");
 	const [submitted, setSubmitted] = useState(false);
 
-	async function login() {
+	async function login(event) {
+		event.preventDefault();
 		if (!email) return;
 		const { error, data } = await supabase.auth.signIn({
 			email,
@@ -24,15 +25,11 @@ export default function Login({ session }) {
 		);
 	}
 
-	const onFormSubmit = (e) => {
-		login();
-	};
-
 	return (
 		<div className='flex w-full h-full justify-center items-center'>
 			<main>
 				<h1 className='text-2xl'>Login</h1>
-				<form onSubmit={onFormSubmit}>
+				<form onSubmit={login}>
 					<input
 						placeholder='Enter email'
 						className='border-2 border-black'
