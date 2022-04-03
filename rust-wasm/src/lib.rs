@@ -144,6 +144,11 @@ impl Image {
         self.pixels[idx] = Pixel {is_blank: false, r: color[0], g: color[1], b: color[2], id: self.pixels[idx].id};
     }
 
+    pub fn paint_with_idx(&mut self, idx: usize, color: Vec<u8>) {
+        if self.pixels[idx].r == color[0] && self.pixels[idx].g == color[1] && self.pixels[idx].b == color[2] {return};
+        self.pixels[idx] = Pixel {is_blank: false, r: color[0], g: color[1], b: color[2], id: self.pixels[idx].id};
+    }
+
     pub fn encode(&self) -> String {
         serde_json::to_string(self).unwrap()
     }

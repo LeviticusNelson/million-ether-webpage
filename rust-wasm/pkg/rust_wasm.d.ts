@@ -56,6 +56,11 @@ export class Image {
 */
   paint(x: number, y: number, color: Uint8Array): void;
 /**
+* @param {number} idx
+* @param {Uint8Array} color
+*/
+  paint_with_idx(idx: number, color: Uint8Array): void;
+/**
 * @returns {string}
 */
   encode(): string;
