@@ -18,6 +18,7 @@ export function image_get_pixel(a: number, b: number, c: number): number;
 export function image_sort_pixels(a: number): void;
 export function image_pixels(a: number, b: number): void;
 export function image_paint(a: number, b: number, c: number, d: number, e: number): void;
+export function image_paint_with_idx(a: number, b: number, c: number, d: number): void;
 export function image_encode(a: number, b: number): void;
 export function get_image_from_db(a: number, b: number, c: number, d: number): number;
 export function __wbindgen_malloc(a: number): number;

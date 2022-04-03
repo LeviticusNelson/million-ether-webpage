@@ -101,6 +101,19 @@ const Canvas = dynamic(
 					drawPixels(context);
 				}, [drawPixels]);
 
+				useEffect(async () => {
+					const handleUpdates = (payload) => {
+						const newPixel = payload.new;
+						const newColor = [newPixel.r, newPixel.g, newPixel.b];
+						image.paint_with_idx(newPixel.id, newColor);
+						const canvas = canvasRef.current;
+						const context = canvas.getContext("2d");
+						drawPixels(context);
+					}
+					const {data: pixels, error} = await supabase.from("Pixels").on("UPDATE", handleUpdates).subscribe();
+
+				}, []);
+
 				return (
 					<div className='absolute t-0 l-0 w-full h-full flex flex-col items-center justify-center'>
 						<canvas

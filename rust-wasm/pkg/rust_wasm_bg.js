@@ -252,7 +252,7 @@ function handleError(f, args) {
         wasm.__wbindgen_exn_store(addHeapObject(e));
     }
 }
-function __wbg_adapter_86(arg0, arg1, arg2, arg3) {
+function __wbg_adapter_87(arg0, arg1, arg2, arg3) {
     wasm.wasm_bindgen__convert__closures__invoke2_mut__hd76261d73af606d5(arg0, arg1, addHeapObject(arg2), addHeapObject(arg3));
 }
 
@@ -365,6 +365,15 @@ export class Image {
         var ptr0 = passArray8ToWasm0(color, wasm.__wbindgen_malloc);
         var len0 = WASM_VECTOR_LEN;
         wasm.image_paint(this.ptr, x, y, ptr0, len0);
+    }
+    /**
+    * @param {number} idx
+    * @param {Uint8Array} color
+    */
+    paint_with_idx(idx, color) {
+        var ptr0 = passArray8ToWasm0(color, wasm.__wbindgen_malloc);
+        var len0 = WASM_VECTOR_LEN;
+        wasm.image_paint_with_idx(this.ptr, idx, ptr0, len0);
     }
     /**
     * @returns {string}
@@ -643,7 +652,7 @@ export function __wbg_new_4beacc9c71572250(arg0, arg1) {
             const a = state0.a;
             state0.a = 0;
             try {
-                return __wbg_adapter_86(a, state0.b, arg0, arg1);
+                return __wbg_adapter_87(a, state0.b, arg0, arg1);
             } finally {
                 state0.a = a;
             }
@@ -742,7 +751,7 @@ export function __wbindgen_memory() {
     return addHeapObject(ret);
 };
 
-export function __wbindgen_closure_wrapper463(arg0, arg1, arg2) {
+export function __wbindgen_closure_wrapper466(arg0, arg1, arg2) {
     var ret = makeMutClosure(arg0, arg1, 136, __wbg_adapter_30);
     return addHeapObject(ret);
 };
