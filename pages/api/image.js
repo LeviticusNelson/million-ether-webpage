@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 	const { data, error } = await supabase
 		.from("Images")
 		.select("id,width,height")
-		.order("id", { ascending: false })
+		.order("id", { ascending: true })
 		.single();
 	let image = await data;
 	if (data) {
