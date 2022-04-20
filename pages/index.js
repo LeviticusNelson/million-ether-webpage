@@ -37,13 +37,13 @@ export default function Home({ user }) {
 
 	return (
 		<div className='flex-wrap overflow-auto'>
-			<div className='p-10'>
+			<div className='p-10 px-16 w-full '>
 				<RgbColorPicker
-					className='border-4 border-black rounded-xl relative'
+					className='border-4 border-black rounded-xl z-10'
 					color={color}
 					onChange={setColor}></RgbColorPicker>
 			</div>
-			<div className=''>
+			<div className='flex-auto'>
 				<Canvas rgb={color} userId={profile}></Canvas>
 			</div>
 		</div>
