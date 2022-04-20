@@ -36,14 +36,16 @@ export default function Home({ user }) {
 	}
 
 	return (
-		<div className='flex px-10'>
+		<div className='flex-wrap overflow-auto'>
 			<div className='p-10'>
 				<RgbColorPicker
-					className='border-4 border-black rounded-xl'
+					className='border-4 border-black rounded-xl relative'
 					color={color}
 					onChange={setColor}></RgbColorPicker>
 			</div>
-			<Canvas rgb={color} userId={profile}></Canvas>
+			<div className=''>
+				<Canvas rgb={color} userId={profile}></Canvas>
+			</div>
 		</div>
 	);
 }
