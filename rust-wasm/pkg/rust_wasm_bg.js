@@ -206,7 +206,7 @@ function makeMutClosure(arg0, arg1, dtor, f) {
     return real;
 }
 function __wbg_adapter_30(arg0, arg1, arg2) {
-    wasm._dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__he7f10970df57129b(arg0, arg1, addHeapObject(arg2));
+    wasm._dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h6b0cfec2734b548c(arg0, arg1, addHeapObject(arg2));
 }
 
 let stack_pointer = 32;
@@ -252,8 +252,8 @@ function handleError(f, args) {
         wasm.__wbindgen_exn_store(addHeapObject(e));
     }
 }
-function __wbg_adapter_87(arg0, arg1, arg2, arg3) {
-    wasm.wasm_bindgen__convert__closures__invoke2_mut__hd76261d73af606d5(arg0, arg1, addHeapObject(arg2), addHeapObject(arg3));
+function __wbg_adapter_88(arg0, arg1, arg2, arg3) {
+    wasm.wasm_bindgen__convert__closures__invoke2_mut__ha3d082b9479fa51d(arg0, arg1, addHeapObject(arg2), addHeapObject(arg3));
 }
 
 /**
@@ -438,6 +438,21 @@ export class Pixel {
             return Pixel.__wrap(ret);
         } finally {
             heap[stack_pointer++] = undefined;
+        }
+    }
+    /**
+    * @returns {string}
+    */
+    get_hex_string() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.pixel_get_hex_string(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            return getStringFromWasm0(r0, r1);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+            wasm.__wbindgen_free(r0, r1);
         }
     }
     /**
@@ -652,7 +667,7 @@ export function __wbg_new_4beacc9c71572250(arg0, arg1) {
             const a = state0.a;
             state0.a = 0;
             try {
-                return __wbg_adapter_87(a, state0.b, arg0, arg1);
+                return __wbg_adapter_88(a, state0.b, arg0, arg1);
             } finally {
                 state0.a = a;
             }
@@ -751,8 +766,8 @@ export function __wbindgen_memory() {
     return addHeapObject(ret);
 };
 
-export function __wbindgen_closure_wrapper466(arg0, arg1, arg2) {
-    var ret = makeMutClosure(arg0, arg1, 136, __wbg_adapter_30);
+export function __wbindgen_closure_wrapper469(arg0, arg1, arg2) {
+    var ret = makeMutClosure(arg0, arg1, 137, __wbg_adapter_30);
     return addHeapObject(ret);
 };
 

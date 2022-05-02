@@ -3,7 +3,7 @@
   "collaborators": [
     "Levi Nelson <levibb11@gmail.com>"
   ],
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": [
     "rust_wasm_bg.wasm",
     "rust_wasm.js",

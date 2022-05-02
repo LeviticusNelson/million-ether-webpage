@@ -32,6 +32,13 @@ impl Pixel {
         deserialized
     }
 
+    pub fn get_hex_string(&self) -> String {
+        format!("{:02X}{:02X}{:02X}", 
+        self.r as f32 as u8, 
+        self.g as f32 as u8, 
+        self.b as f32 as u8)
+    }
+
     pub fn id(&self) -> u64 {
         self.id
     }

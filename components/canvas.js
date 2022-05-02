@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef} from "react";
 import { supabase } from "../utils/supabaseClient";
 
 const Canvas = dynamic(
@@ -14,7 +14,7 @@ const Canvas = dynamic(
 			image.sort_pixels();
 			const WIDTH = image.width();
 			const HEIGHT = image.height();
-			
+
 			return (props) => {
 				const canvasRef = useRef(null);
 				const userId = profileData.id;
@@ -82,15 +82,24 @@ const Canvas = dynamic(
 					image.paint(x, y, newColor);
 					drawPixels(context);
 					pixel = image.get_pixel(x, y);
-					
+
 					// This should be rewritten in rust
 					const { data, error } = await supabase
 						.from("Pixels")
-						.update({ r: pixel.r(), g: pixel.g(), b: pixel.b(), last_user: userId, is_blank: false })
+						.update({
+							r: pixel.r(),
+							g: pixel.g(),
+							b: pixel.b(),
+							last_user: userId,
+							is_blank: false,
+						})
 						.eq("id", pixel.id());
 				};
 
 				const eventClickHandler = (event) => {
+					if (props.movingCursor) {
+						return;
+					}
 					paintPixel(event);
 				};
 
@@ -109,15 +118,17 @@ const Canvas = dynamic(
 						const canvas = canvasRef.current;
 						const context = canvas.getContext("2d");
 						drawPixels(context);
-					}
-					const {data: pixels, error} = await supabase.from("Pixels").on("UPDATE", handleUpdates).subscribe();
-
+					};
+					const { data: pixels, error } = await supabase
+						.from("Pixels")
+						.on("UPDATE", handleUpdates)
+						.subscribe();
 				}, []);
 
 				return (
-					<div className='absolute t-0 l-0 w-full h-full flex flex-col items-center justify-center'>
+					<div className=''>
 						<canvas
-							className='cursor-pointer'
+							className={!props.movingCursor ? "cursor-pointer" : "cursor-move"}
 							ref={canvasRef}
 							width={WIDTH * PIXEL_SIZE + 1}
 							height={HEIGHT * PIXEL_SIZE + 1}
