@@ -84,12 +84,12 @@ export default function Home({ user }) {
 
 	return (
 		<div className='flex md:flex-row xs:flex-col sm:flex-col sm:space-y-4 md:space-y-0'>
-			<div className='p-5 flex-1'>
+			<div className='z-10 p-5 flex-1'>
 				<div className='flex md:flex-col sm:flex-row absolute sm:space-x-2 sm:space-y-0 md:space-x-0 md:space-y-2'>
 					<div className='flex flex-row'>
 						<div>
 							<button
-								className={"border-2 p-2 "}
+								className={"border-2 p-2 bg-white"}
 								style={{ borderColor: hexColor }}
 								onClick={() => {
 									!showPicker ? setShowPicker(true) : setShowPicker(false);
