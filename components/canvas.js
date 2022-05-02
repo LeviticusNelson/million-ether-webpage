@@ -14,13 +14,14 @@ const Canvas = dynamic(
 			image.sort_pixels();
 			const WIDTH = image.width();
 			const HEIGHT = image.height();
+			const zoom = 0;
 			
 			return (props) => {
-				const zoom = props.zoom;
-				let PIXEL_SIZE = 15 + zoom; //px
+				let PIXEL_SIZE = 15; //px
 				const canvasRef = useRef(null);
 				const userId = profileData.id;
-
+				zoom = props.zoom;
+				PIXEL_SIZE += zoom;
 				const drawPixels = (ctx) => {
 					ctx.strokeStyle = "black";
 					ctx.lineWidth = 1;
@@ -62,6 +63,7 @@ const Canvas = dynamic(
 				newColor = [newColor.r, newColor.g, newColor.b];
 
 				const paintPixel = async (event) => {
+					
 					const canvas = canvasRef.current;
 					const context = canvas.getContext("2d");
 					const rect = canvas.getBoundingClientRect();
