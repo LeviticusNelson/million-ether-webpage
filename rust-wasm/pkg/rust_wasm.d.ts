@@ -79,6 +79,10 @@ export class Pixel {
 */
   static decode(val: any): Pixel;
 /**
+* @returns {string}
+*/
+  get_hex_string(): string;
+/**
 * @returns {BigInt}
 */
   id(): BigInt;
