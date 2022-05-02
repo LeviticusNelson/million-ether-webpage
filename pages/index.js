@@ -3,9 +3,8 @@ import { useEffect, useState, Component } from "react";
 import { RgbColorPicker } from "react-colorful";
 import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
-import { PenTool, Move } from "react-feather";
+import { PenTool, Move, Plus, Minus } from "react-feather";
 import Draggable from "react-draggable";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 export default function Home({ user }) {
 	const [profile, setProfile] = useState(null);
@@ -13,6 +12,7 @@ export default function Home({ user }) {
 	const [showPicker, setShowPicker] = useState(false);
 	const [moving, setMoving] = useState(false);
 	const [hexColor, setHexColor] = useState("#000000");
+	const [zoom, setZoom] = useState(0);
 	const router = useRouter();
 	useEffect(() => {
 		fetchProfile();
@@ -44,6 +44,18 @@ export default function Home({ user }) {
 		let colorCopy = [...color];
 		colorCopy[index] = value;
 		setColor(colorCopy);
+	}
+	function handleZoomIn(num) {
+		let newZoom = zoom + 5;
+		if (newZoom <= 100) {
+			setZoom(newZoom);
+		}
+	}
+	function handleZoomOut() {
+		let newZoom = zoom - 5;
+		if (newZoom >= 0) {
+			setZoom(newZoom);
+		}
 	}
 	let movingButtonStyle;
 	let canvasPointer;
@@ -104,13 +116,29 @@ export default function Home({ user }) {
 							</button>
 						</div>
 					</div>
+					<div>
+						<button className='border-2 border-black bg-blue-400 p-2' onClick={handleZoomIn}>
+							<Plus />
+						</button>
+					</div>
+					<div>
+						<button className='border-2 border-black bg-blue-400 p-2' onClick={handleZoomOut}>
+							<Minus />
+						</button>
+					</div>
 				</div>
 			</div>
-				<Draggable disabled={!moving} bounds={{top: -100, left: -100, right: 100, bottom: 100}}>
-					<div className='p-5 flex-1'>
-						<Canvas rgb={color} userId={profile} movingCursor={moving}></Canvas>
-					</div>
-				</Draggable>
+			<Draggable
+				disabled={!moving}
+				bounds={{ top: -100, left: -100, right: 100, bottom: 100 }}>
+				<div className='p-5 flex-1'>
+					<Canvas
+						rgb={color}
+						userId={profile}
+						movingCursor={moving}
+						zoom={zoom}></Canvas>
+				</div>
+			</Draggable>
 			<div className='flex-1'></div>
 		</div>
 	);
