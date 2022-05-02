@@ -6,7 +6,7 @@ const Canvas = dynamic(
 	{
 		loader: async () => {
 			const rust = await import("@leviticusnelson/rust-wasm");
-			const PIXEL_SIZE = 15; //px
+			
 			const response = await fetch("/api/image");
 			const profileData = await supabase.auth.user();
 			const data = await response.json();
@@ -14,8 +14,10 @@ const Canvas = dynamic(
 			image.sort_pixels();
 			const WIDTH = image.width();
 			const HEIGHT = image.height();
-
+			
 			return (props) => {
+				const zoom = props.zoom;
+				let PIXEL_SIZE = 15 + zoom; //px
 				const canvasRef = useRef(null);
 				const userId = profileData.id;
 
@@ -102,6 +104,7 @@ const Canvas = dynamic(
 					}
 					paintPixel(event);
 				};
+
 
 				useEffect(() => {
 					const canvas = canvasRef.current;
