@@ -5,7 +5,6 @@ import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 import { PenTool, Move } from "react-feather";
 import Draggable from "react-draggable";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 export default function Home({ user }) {
 	const [profile, setProfile] = useState(null);
