@@ -16,7 +16,7 @@ const Canvas = dynamic(
 			const HEIGHT = image.height();
 			
 			return (props) => {
-				let zoom = props.zoom;
+				const zoom = props.zoom;
 				let PIXEL_SIZE = 15 + zoom; //px
 				const canvasRef = useRef(null);
 				const userId = profileData.id;
@@ -103,8 +103,6 @@ const Canvas = dynamic(
 						return;
 					}
 					paintPixel(event);
-					//idk why but this needs to stay lol
-					console.log(PIXEL_SIZE);
 				};
 
 
